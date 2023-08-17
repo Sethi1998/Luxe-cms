@@ -1,20 +1,16 @@
 import React from "react";
-import Header from "./Header";
-import Footer from "./Footer";
+import Sidebar from "./Sidebar";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+export const Layout = ({ children }: LayoutProps) => {
   return (
-    <>
-      <Header />
-      <div className="min-h-[calc(100vh-40px)]">
-      {children}
+    <div className="flex">
+      <div className="flex-[.5]">
+        <Sidebar />
       </div>
-      <Footer />
-    </>
+      <div className="flex-[2]">{children}</div>
+    </div>
   );
 };
-
-export default Layout;

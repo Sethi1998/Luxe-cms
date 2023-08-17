@@ -14,9 +14,7 @@ module.exports = {
         primary:'#164641',
         secondary:"#D9ED82"
       },
-      backgroundImage: {
-        'gradient': 'linear-gradient(180deg, #20433F 0.34%, rgba(0, 0, 0, 0.00) 76.99%)'
-      },
+
     },
   },
   plugins: [],

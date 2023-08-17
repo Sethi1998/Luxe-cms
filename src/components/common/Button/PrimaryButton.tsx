@@ -1,24 +1,22 @@
-import Link from "next/link";
-
 export interface ButtonProp {
   label: string;
-  variant: ButtonVariant;
-  link?: string;
   type?: ButtonType;
+  handleClick?: (value: any) => void;
 }
 
 enum ButtonType {
   button = "button",
   submit = "submit",
 }
-export enum ButtonVariant {
-  primary = "flex w-[146px] h-[48px] rounded-full bg-secondary text-primary items-center justify-center text-base font-semibold  ",
-  secondary = "flex w-[146px] h-[48px] rounded-full bg-primary text-secondary items-center justify-center font-semibold ",
-}
-export const PrimaryButton = ({ label, variant, type, link }: ButtonProp) => {
+
+export const PrimaryButton = ({ label, type, handleClick }: ButtonProp) => {
   return (
-    <Link className={variant} href={link || ""}>
+    <button
+      className="bg-black text-white p-2 rounded"
+      type={type}
+      onClick={handleClick}
+    >
       {label}
-    </Link>
+    </button>
   );
 };
