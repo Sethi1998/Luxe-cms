@@ -1,10 +1,17 @@
 import axios from "axios";
 import { getCookies } from "../cookies";
+import Head from "next/head";
 
-async function apiHandler(path: string, method = "GET", params = {}) {
+async function apiHandler(
+  path: string,
+  method = "GET",
+  params = {},
+  Headers?: string
+) {
   const token = getCookies("jwtToken");
   const headers = {
     Authorization: getCookies("jwtToken"),
+    "content-type": Headers && "multipart/form-data",
   };
   switch (method) {
     case "GET":

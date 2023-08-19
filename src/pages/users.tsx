@@ -2,11 +2,7 @@ import { User } from "@/components/User";
 import React from "react";
 
 const UserPage = () => {
-  return (
-    <div>
-      <User />
-    </div>
-  );
+  return <User />;
 };
 
 export default UserPage;

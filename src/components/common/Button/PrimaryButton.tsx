@@ -4,7 +4,7 @@ export interface ButtonProp {
   handleClick?: (value: any) => void;
 }
 
-enum ButtonType {
+export enum ButtonType {
   button = "button",
   submit = "submit",
 }

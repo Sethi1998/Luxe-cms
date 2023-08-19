@@ -6,14 +6,16 @@ import { Layout } from "../Layout";
 import { CMSModal } from "@/context";
 import { Loader } from "../common/Loader";
 
-interface UserProps {
+export interface UserProps {
   _id: string;
   profileImg: string;
   email: string;
   phone: string;
   firstName: string;
   lastName: string;
+  role: string;
 }
+
 export enum UserRole {
   user = "user",
   owner = "owner",
@@ -24,7 +26,7 @@ export const User = () => {
   const [filterUsers, setFilterUsers] = useState(UserRole.all);
   const { loading, setLoading } = useContext(CMSModal);
   useEffect(() => {
-    const data = fetchUsers();
+    fetchUsers();
   }, []);
   const fetchUsers = async () => {
     setLoading(true);

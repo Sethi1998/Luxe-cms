@@ -10,7 +10,6 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <main className={poppin.className}>
       <CMSContext>
-        
         <Component {...pageProps} />
       </CMSContext>
     </main>
