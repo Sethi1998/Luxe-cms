@@ -2,7 +2,6 @@ import React, { useContext, useRef, useState } from "react";
 import { Modal } from "../common/Modal";
 import { Input } from "../common/Input";
 import { ButtonType, PrimaryButton } from "../common/Button/PrimaryButton";
-import { createCategory, editCategory } from "@/helpers/api/constants";
 import { apiHandler } from "@/helpers/api";
 import { CMSModal } from "@/context";
 import { CategoriesProps } from ".";
@@ -12,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FileInput } from "../common/FileInput";
 import { Toaster, toast } from "react-hot-toast";
+import { createCompany, editCompany } from "@/helpers/api/constants";
 interface ModalProps {
   label: string;
   setAddCategories: (value: boolean) => void;
@@ -21,7 +21,7 @@ interface ModalProps {
 }
 // validation
 const CategorySchema = yup.object().shape({
-  vehicleName: yup.string().required(" Name is required"),
+  companyName: yup.string().required(" Name is required"),
 });
 
 export const AddCategories = ({
@@ -38,23 +38,23 @@ export const AddCategories = ({
   } = useForm({
     resolver: yupResolver(CategorySchema),
     values: {
-      vehicleName: label === "Add" ? "" : categoryData.vehicleName,
+      companyName: label === "Add" ? "" : categoryData.companyName,
     },
   });
   const [categoryFile, setCategoryFile] = useState<Blob>();
-  const submitHandler = async (data: { vehicleName: string }) => {
+  const submitHandler = async (data: { companyName: string }) => {
     let res = [];
     let input = {};
     switch (label) {
       case "Add":
-        console.log('asas')
+        console.log("asas");
         if (!categoryFile) return toast.error("Vehicle Image is required ");
         setLoading(true);
         input = {
-          vehicleName: data.vehicleName,
+          companyName: data.companyName,
           files: categoryFile,
         };
-        res = await apiHandler(`${createCategory}`, "POST", input, "multipart");
+        res = await apiHandler(`${createCompany}`, "POST", input, "multipart");
         if (res.data.data) {
           fetchUser();
           setLoading(false);
@@ -62,18 +62,18 @@ export const AddCategories = ({
         }
         break;
       case "Edit":
-        if (!categoryFile && !categoryData.vehicleImg)
+        if (!categoryFile && !categoryData.companyImg)
           return toast.error("Vehicle Image is required ");
         setLoading(true);
         input = {
           _id: categoryData._id,
-          vehicleName: data.vehicleName
-            ? data.vehicleName
-            : categoryData.vehicleName,
-          vehicleImg: categoryData.vehicleImg,
+         companyName: data.companyName
+            ? data.companyName
+            : categoryData.companyName,
+            companyImg: categoryData.companyImg,
           files: categoryFile,
         };
-        res = await apiHandler(`${editCategory}`, "POST", input, "multipart");
+        res = await apiHandler(`${editCompany}`, "POST", input, "multipart");
         if (res.data.data) {
           fetchUser();
           setAddCategories(false);
@@ -100,16 +100,16 @@ export const AddCategories = ({
             })}
           >
             <Input
-              label="Category Name"
-              name="vehicleName"
+              label="Company Name"
+              name="companyName"
               type="text"
-              error={errors.vehicleName?.message}
+              error={errors.companyName?.message}
               register={register}
             />
 
             <FileInput
-              name="vehicleImg"
-              value={label === "Add" ? null : categoryData.vehicleImg}
+              name="companyImg"
+              value={label === "Add" ? null : categoryData.companyImg}
               handleChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (e.target.files !== null) {
                   setCategoryFile(e.target.files[0]);

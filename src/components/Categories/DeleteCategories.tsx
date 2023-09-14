@@ -3,8 +3,8 @@ import { Modal } from "../common/Modal";
 import { ButtonType, PrimaryButton } from "../common/Button/PrimaryButton";
 import { CMSModal } from "@/context";
 import { apiHandler } from "@/helpers/api";
-import { deleteCatgeories } from "@/helpers/api/constants";
 import { CategoriesProps } from ".";
+import { deleteCompany } from "@/helpers/api/constants";
 interface ModalProps {
   categoryData: CategoriesProps;
   setDeleteCategories: (value: boolean) => void;
@@ -21,7 +21,7 @@ export const DeleteCategories = ({
     const data = {
       id: categoryData._id,
     };
-    const res = await apiHandler(`${deleteCatgeories}`, "POST", data);
+    const res = await apiHandler(`${deleteCompany}`, "POST", data);
     if (res) {
       fetchData();
       setDeleteCategories(false);
