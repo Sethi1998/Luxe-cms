@@ -5,6 +5,7 @@ import Container from "../common/Container";
 import { Layout } from "../Layout";
 import { CMSModal } from "@/context";
 import { Loader } from "../common/Loader";
+import { toast } from "react-hot-toast";
 
 export interface UserProps {
   _id: string;
@@ -30,10 +31,14 @@ export const User = () => {
   }, []);
   const fetchUsers = async () => {
     setLoading(true);
-    const res = await apiHandler(`${getUsers}?filter=${filterUsers}`, "GET");
-    if (res.data) {
-      setUsersData(res.data);
-      setLoading(false);
+    try {
+      const res = await apiHandler(`${getUsers}?filter=${filterUsers}`, "GET");
+      if (res.data.data) {
+        setUsersData(res.data.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      toast.error("Something Went Wrong");
     }
   };
   return (

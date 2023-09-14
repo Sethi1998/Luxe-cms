@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { apiHandler } from "@/helpers/api";
 import { getCategories } from "@/helpers/api/constants";
 import React, { useContext, useEffect, useState } from "react";
@@ -10,6 +11,7 @@ import { CMSModal } from "@/context";
 import { Loader } from "../common/Loader";
 import { DeleteCategories } from "./DeleteCategories";
 import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
 
 export interface CategoriesProps {
   _id: string;
@@ -21,20 +23,26 @@ export const Categories = () => {
   const [categoriesData, setCategoriesData] = useState<CategoriesProps[]>([]);
   const [addCategories, setAddCategories] = useState(false);
   const [deleteCategories, setDeleteCategories] = useState(false);
-  const [categoryid, setCategoryId] = useState("");
-  const [deleted, setDeleted] = useState(false);
+  const [categoryData, setCategoryData] = useState<CategoriesProps>({
+    _id: "",
+    vehicleImg: "",
+    vehicleName: "",
+  });
   const { loading, setLoading } = useContext(CMSModal);
   const router = useRouter();
   useEffect(() => {
-    fetchUsers();
-  }, [router, deleted]);
-  const fetchUsers = async () => {
-    setLoading(true);
-    const res = await apiHandler(`${getCategories}`, "GET");
-    if (res.data) {
-      setCategoriesData(res.data);
-      setLoading(false);
-      setDeleted(false);
+    fetchCategory();
+  }, []);
+  const fetchCategory = async () => {
+    try {
+      setLoading(true);
+      const res = await apiHandler(`${getCategories}`, "GET");
+      if (res.data.data) {
+        setCategoriesData(res.data.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      toast.error("Something Went Wrong");
     }
   };
   return (
@@ -86,6 +94,7 @@ export const Categories = () => {
                         onClick={() => {
                           setCategoryLabel("Edit");
                           setAddCategories(true);
+                          setCategoryData(item);
                         }}
                       />
                       <Image
@@ -95,7 +104,7 @@ export const Categories = () => {
                         height={20}
                         className="cursor-pointer"
                         onClick={() => {
-                          setCategoryId(item._id);
+                          setCategoryData(item);
                           setDeleteCategories(true);
                         }}
                       />
@@ -113,16 +122,17 @@ export const Categories = () => {
           {addCategories && (
             <AddCategories
               label={categorylabel}
+              fetchUser={fetchCategory}
               setAddCategories={setAddCategories}
               categoriesData={categoriesData}
-              setCategoriesData={setCategoriesData}
+              categoryData={categoryData}
             />
           )}
           {deleteCategories && (
             <DeleteCategories
-              categoryId={categoryid}
+              categoryData={categoryData}
+              fetchData={fetchCategory}
               setDeleteCategories={setDeleteCategories}
-              setDeleted={setDeleted}
             />
           )}
           {loading && <Loader />}

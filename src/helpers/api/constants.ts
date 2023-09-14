@@ -7,6 +7,7 @@ export const getCategories = "getCategories";
 //post
 export const adminLogin = "login";
 export const createCategory = "createCategory";
+export const editCategory = 'editCategory'
 
 //delete
 export const deleteCatgeories = "deleteCategory";
