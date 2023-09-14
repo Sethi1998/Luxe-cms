@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import { apiHandler } from "@/helpers/api";
-import { getCategories } from "@/helpers/api/constants";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { Layout } from "../Layout";
@@ -10,31 +10,40 @@ import { CMSModal } from "@/context";
 import { Loader } from "../common/Loader";
 import { DeleteCategories } from "./DeleteCategories";
 import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
+import { getCompanies } from "@/helpers/api/constants";
 
 export interface CategoriesProps {
   _id: string;
-  vehicleName: string;
-  vehicleImg: string;
+  companyName: string;
+  companyImg: string;
 }
 export const Categories = () => {
   const [categorylabel, setCategoryLabel] = useState("");
   const [categoriesData, setCategoriesData] = useState<CategoriesProps[]>([]);
   const [addCategories, setAddCategories] = useState(false);
   const [deleteCategories, setDeleteCategories] = useState(false);
-  const [categoryid, setCategoryId] = useState("");
-  const [deleted, setDeleted] = useState(false);
+  const [categoryData, setCategoryData] = useState<CategoriesProps>({
+    _id: "",
+    companyImg: "",
+    companyName: "",
+  });
   const { loading, setLoading } = useContext(CMSModal);
   const router = useRouter();
   useEffect(() => {
-    fetchUsers();
-  }, [router, deleted]);
-  const fetchUsers = async () => {
-    setLoading(true);
-    const res = await apiHandler(`${getCategories}`, "GET");
-    if (res.data) {
-      setCategoriesData(res.data);
-      setLoading(false);
-      setDeleted(false);
+    fetchCategory();
+  }, []);
+  
+  const fetchCategory = async () => {
+    try {
+      setLoading(true);
+      const res = await apiHandler(`${getCompanies}`, "GET");
+      if (res.data.data) {
+        setCategoriesData(res.data.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      toast.error("Something Went Wrong");
     }
   };
   return (
@@ -67,10 +76,10 @@ export const Categories = () => {
                     key={item._id}
                     className="grid grid-cols-3 gap-6 border-b items-center"
                   >
-                    <td>{item.vehicleName}</td>
+                    <td>{item.companyName}</td>
                     <td className="flex justify-center items-center">
                       <img
-                        src={`${process.env.NEXT_PUBLIC_API_IMG_URL}${item.vehicleImg}`}
+                        src={`${process.env.NEXT_PUBLIC_API_IMG_URL}/${item.companyImg}`}
                         alt="img"
                         width={20}
                         height={20}
@@ -86,6 +95,7 @@ export const Categories = () => {
                         onClick={() => {
                           setCategoryLabel("Edit");
                           setAddCategories(true);
+                          setCategoryData(item);
                         }}
                       />
                       <Image
@@ -95,7 +105,7 @@ export const Categories = () => {
                         height={20}
                         className="cursor-pointer"
                         onClick={() => {
-                          setCategoryId(item._id);
+                          setCategoryData(item);
                           setDeleteCategories(true);
                         }}
                       />
@@ -113,16 +123,17 @@ export const Categories = () => {
           {addCategories && (
             <AddCategories
               label={categorylabel}
+              fetchUser={fetchCategory}
               setAddCategories={setAddCategories}
               categoriesData={categoriesData}
-              setCategoriesData={setCategoriesData}
+              categoryData={categoryData}
             />
           )}
           {deleteCategories && (
             <DeleteCategories
-              categoryId={categoryid}
+              categoryData={categoryData}
+              fetchData={fetchCategory}
               setDeleteCategories={setDeleteCategories}
-              setDeleted={setDeleted}
             />
           )}
           {loading && <Loader />}

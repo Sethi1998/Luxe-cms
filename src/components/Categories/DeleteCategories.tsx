@@ -3,27 +3,28 @@ import { Modal } from "../common/Modal";
 import { ButtonType, PrimaryButton } from "../common/Button/PrimaryButton";
 import { CMSModal } from "@/context";
 import { apiHandler } from "@/helpers/api";
-import { deleteCatgeories } from "@/helpers/api/constants";
+import { CategoriesProps } from ".";
+import { deleteCompany } from "@/helpers/api/constants";
 interface ModalProps {
-  categoryId: string;
+  categoryData: CategoriesProps;
   setDeleteCategories: (value: boolean) => void;
-  setDeleted: (value: boolean) => void;
+  fetchData: () => void;
 }
 export const DeleteCategories = ({
-  categoryId,
+  categoryData,
   setDeleteCategories,
-  setDeleted,
+  fetchData,
 }: ModalProps) => {
   const { setLoading } = useContext(CMSModal);
   const deleteCategoryHandle = async () => {
     setLoading(true);
     const data = {
-      id: categoryId,
+      id: categoryData._id,
     };
-    const res = await apiHandler(`${deleteCatgeories}`, "POST", data);
+    const res = await apiHandler(`${deleteCompany}`, "POST", data);
     if (res) {
+      fetchData();
       setDeleteCategories(false);
-      setDeleted(true);
       setLoading(false);
     }
   };

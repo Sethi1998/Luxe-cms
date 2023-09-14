@@ -8,33 +8,42 @@ import { apiHandler } from "@/helpers/api";
 import { adminLogin } from "@/helpers/api/constants";
 import { setCookies } from "@/helpers/cookies";
 import toast, { Toaster } from "react-hot-toast";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+interface EmailInterface {
+  email: string;
+  password: string;
+}
+
+const EmailSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Enter a valid email")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .max(32, "Max password length is 32")
+    .required("Password is required"),
+});
 
 const Login = () => {
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
   const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(EmailSchema) });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const handleSubmit = async (
-    e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>
-  ) => {
-    e.preventDefault();
+  const submitHandler = async (data: EmailInterface) => {
     try {
-      const res = await apiHandler(`${adminLogin}`, "POST", formData);
+      const res = await apiHandler(`${adminLogin}`, "POST", data);
       if (res.data.token) {
         const token = res.data.token;
         setCookies("jwtToken", token);
         router.push("/");
       } else {
-        toast.error(res.data.message);
+        toast.error(res.data.error.message);
       }
     } catch (error) {
       toast.error("Something Went Wrong");
@@ -47,9 +56,25 @@ const Login = () => {
         <Image src="/loginCar.png" alt="login" width={500} height={500} />
       </div>
       <div className="flex-[.5]">
-        <form className="flex flex-col gap-4 w-[60%]" onSubmit={handleSubmit}>
-          <Input label="email" handleChange={handleChange} type="text" />
-          <Input label="password" handleChange={handleChange} type="password" />
+        <form
+          className="flex flex-col gap-4 w-[60%]"
+          onSubmit={handleSubmit((data) => submitHandler(data))}
+        >
+          <Input
+            label="Email"
+            name="email"
+            type="text"
+            error={errors.email?.message}
+            register={register}
+          />
+          <Input
+            label="Password"
+            name="password"
+            type="password"
+            error={errors.password?.message}
+            register={register}
+          />
+
           <PrimaryButton label="Submit" />
         </form>
         <Toaster />

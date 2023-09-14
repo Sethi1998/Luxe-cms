@@ -1,49 +1,93 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Modal } from "../common/Modal";
 import { Input } from "../common/Input";
 import { ButtonType, PrimaryButton } from "../common/Button/PrimaryButton";
-import { createCategory } from "@/helpers/api/constants";
 import { apiHandler } from "@/helpers/api";
 import { CMSModal } from "@/context";
 import { CategoriesProps } from ".";
 import { Loader } from "../common/Loader";
-
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { FileInput } from "../common/FileInput";
+import { Toaster, toast } from "react-hot-toast";
+import { createCompany, editCompany } from "@/helpers/api/constants";
 interface ModalProps {
   label: string;
   setAddCategories: (value: boolean) => void;
   categoriesData: CategoriesProps[];
-  setCategoriesData: (value: CategoriesProps[]) => void;
+  categoryData: CategoriesProps;
+  fetchUser: () => void;
 }
+// validation
+const CategorySchema = yup.object().shape({
+  companyName: yup.string().required(" Name is required"),
+});
+
 export const AddCategories = ({
   setAddCategories,
-  categoriesData,
-  setCategoriesData,
+  categoryData,
   label,
+  fetchUser,
 }: ModalProps) => {
-  const [categoryName, setcategoryName] = useState("");
-  const [categoryFile, setCategoryFile] = useState<Blob>();
   const { setLoading } = useContext(CMSModal);
-  const addCategories = async (
-    e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>
-  ) => {
-    e.preventDefault();
-    setLoading(true);
-    const data = {
-      vehicleName: categoryName,
-      files: categoryFile,
-    };
-    const res = await apiHandler(
-      `${createCategory}`,
-      "POST",
-      data,
-      "multipart"
-    );
-    if (res.data) {
-      setCategoriesData([...categoriesData, res.data]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(CategorySchema),
+    values: {
+      companyName: label === "Add" ? "" : categoryData.companyName,
+    },
+  });
+  const [categoryFile, setCategoryFile] = useState<Blob>();
+  const submitHandler = async (data: { companyName: string }) => {
+    let res = [];
+    let input = {};
+    switch (label) {
+      case "Add":
+        console.log("asas");
+        if (!categoryFile) return toast.error("Vehicle Image is required ");
+        setLoading(true);
+        input = {
+          companyName: data.companyName,
+          files: categoryFile,
+        };
+        res = await apiHandler(`${createCompany}`, "POST", input, "multipart");
+        if (res.data.data) {
+          fetchUser();
+          setLoading(false);
+          setAddCategories(false);
+        }
+        break;
+      case "Edit":
+        if (!categoryFile && !categoryData.companyImg)
+          return toast.error("Vehicle Image is required ");
+        setLoading(true);
+        input = {
+          _id: categoryData._id,
+         companyName: data.companyName
+            ? data.companyName
+            : categoryData.companyName,
+            companyImg: categoryData.companyImg,
+          files: categoryFile,
+        };
+        res = await apiHandler(`${editCompany}`, "POST", input, "multipart");
+        if (res.data.data) {
+          fetchUser();
+          setAddCategories(false);
+        }
+      default:
+        break;
+    }
+
+    if (res?.data?.error) {
       setLoading(false);
-      setAddCategories(false);
+      toast.error(res.data.error.message);
     }
   };
+
   return (
     <div>
       <Modal close={() => setAddCategories(false)}>
@@ -51,23 +95,33 @@ export const AddCategories = ({
         <div className="flex justify-center">
           <form
             className="flex flex-col gap-4 w-[50%]"
-            onSubmit={addCategories}
+            onSubmit={handleSubmit((data) => {
+              submitHandler(data);
+            })}
           >
             <Input
-              label="Category Name"
-              handleChange={(e) => setcategoryName(e.target.value)}
+              label="Company Name"
+              name="companyName"
               type="text"
+              error={errors.companyName?.message}
+              register={register}
             />
-            <Input
-              label="Choose File"
+
+            <FileInput
+              name="companyImg"
+              value={label === "Add" ? null : categoryData.companyImg}
               handleChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (e.target.files !== null) {
                   setCategoryFile(e.target.files[0]);
                 }
               }}
-              type="file"
             />
-            <PrimaryButton label="Add Category" type={ButtonType.submit} />
+
+            <Toaster />
+            <PrimaryButton
+              label={label === "Add" ? "Add Category" : "Edit Category"}
+              type={ButtonType.submit}
+            />
           </form>
         </div>
       </Modal>
