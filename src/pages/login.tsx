@@ -53,7 +53,7 @@ const Login = () => {
   return (
     <div className="absolute top-[20%] flex w-full items-center p-10">
       <div className="flex-1">
-        <Image src="/loginCar.png" alt="login" width={500} height={500} />
+        <Image src="/loginhome.png" alt="login" width={500} height={500} />
       </div>
       <div className="flex-[.5]">
         <form
