@@ -15,6 +15,10 @@ const listing = [
     link: "/users",
   },
   {
+    name: "Vehicle Type",
+    link: "/types",
+  },
+  {
     name: "Categories",
     link: "/categories",
   },
@@ -42,8 +46,10 @@ const Sidebar = () => {
             <li
               key={item.link}
               className={twMerge(
-                router.asPath === item.link ? "border-b w-full text-[#D9ED82]" : "w-full",
-            'hover:border-b border-[#D9ED82]'
+                router.asPath === item.link
+                  ? "border-b w-full text-[#D9ED82]"
+                  : "w-full",
+                "hover:border-b border-[#D9ED82]"
               )}
             >
               <Link href={item.link}>{item.name}</Link>
