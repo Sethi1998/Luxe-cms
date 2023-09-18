@@ -29,7 +29,6 @@ export const Categories = () => {
     companyName: "",
   });
   const { loading, setLoading } = useContext(CMSModal);
-  const router = useRouter();
   useEffect(() => {
     fetchCategory();
   }, []);
@@ -125,7 +124,6 @@ export const Categories = () => {
               label={categorylabel}
               fetchUser={fetchCategory}
               setAddCategories={setAddCategories}
-              categoriesData={categoriesData}
               categoryData={categoryData}
             />
           )}
