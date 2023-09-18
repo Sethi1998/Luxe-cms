@@ -44,7 +44,7 @@ export const User = () => {
   return (
     <Layout>
       <Container>
-        <h2 className="text-xl font-bold">User Listing</h2>
+        <h2 className="text-2xl font-bold">User Listing</h2>
         <table className="mt-6 flex flex-col gap-4 w-full ">
           <thead className="text-center ">
             <tr className="grid grid-cols-3 gap-6 border-b">
