@@ -50,7 +50,7 @@ export const Categories = () => {
       <Layout>
         <Container>
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold">Vehicle Categories :</h2>
+            <h2 className="text-2xl font-bold">Vehicle Categories :</h2>
             <PrimaryButton
               label="Add  Categories"
               handleClick={() => {

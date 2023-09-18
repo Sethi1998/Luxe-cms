@@ -31,10 +31,10 @@ const Sidebar = () => {
       <div className="flex justify-center">
         <div className="flex flex-col gap-2 items-center">
           <Image
-            src="/logo.png"
+            src="/img/logo.png"
             alt="logo"
-            width="50"
-            height="50"
+            width="40"
+            height="40"
             className="mt-10"
           />
           <h1 className="font-bold text-2xl">LuxeRide</h1>
