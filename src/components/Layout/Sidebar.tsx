@@ -22,12 +22,16 @@ const listing = [
     name: "Categories",
     link: "/categories",
   },
+  {
+    name: "Contact Support",
+    link: "/contactSupport",
+  },
 ];
 
 const Sidebar = () => {
   const router = useRouter();
   return (
-    <div className="bg-black h-screen text-white">
+    <div className="fixed left-0 bg-black h-full text-white w-[300px]">
       <div className="flex justify-center">
         <div className="flex flex-col gap-2 items-center">
           <Image
