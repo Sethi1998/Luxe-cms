@@ -13,6 +13,7 @@ export const createCompany = "createCompany";
 export const editCompany = "editCompany";
 export const createType = "createVehicleType";
 export const editType = "editVehicleType";
+export const addSubCategory= 'addSubCategory'
 
 //delete
 export const deleteCompany = "deleteCompany";

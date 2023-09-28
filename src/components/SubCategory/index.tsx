@@ -83,8 +83,7 @@ export const SubCategory = () => {
           </table>
         ) : (
           <h2 className="font-bold text-lg text-secondary absolute top-[50%] left-[40%]">
-            No Data To Show, Please Add Data By Clicking on Add Categories
-            Button
+            No Data To Show.
           </h2>
         )}
       </Container>

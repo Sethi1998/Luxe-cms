@@ -5,6 +5,7 @@ import { me } from "@/helpers/api/constants";
 import { apiHandler } from "@/helpers/api";
 import { Loader } from "../common/Loader";
 import { useRouter } from "next/router";
+import { Toaster } from "react-hot-toast";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -20,7 +21,7 @@ export const Layout = ({ children }: LayoutProps) => {
   const fetchMe = async () => {
     setLoading(true);
     const res = await apiHandler(`${me}`, "GET");
-    
+
     if (res.data.success === true) {
       setUserData(res.data.data);
       setLoading(false);
