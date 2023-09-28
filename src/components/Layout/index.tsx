@@ -40,7 +40,7 @@ export const Layout = ({ children }: LayoutProps) => {
   }
   return (
     <div className="flex">
-      <div className="flex-[.5]">
+      <div className="flex-[.7]">
         <Sidebar />
       </div>
       <div className="flex-[2]">{children}</div>

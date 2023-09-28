@@ -23,6 +23,10 @@ const listing = [
     link: "/categories",
   },
   {
+    name: "Sub Categories",
+    link: "/subCategory",
+  },
+  {
     name: "Contact Support",
     link: "/contactSupport",
   },

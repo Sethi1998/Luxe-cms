@@ -4,7 +4,8 @@ export const getUser = "getUser";
 export const getUsers = "getUsers";
 export const getCompanies = "getCompanies";
 export const getTypes = "getVehicleTypes";
-export const getSupport = 'getSupport'
+export const getSupport = "getSupport";
+export const getSubCategories = "getSubCategories";
 
 //post
 export const adminLogin = "login";
